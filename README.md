@@ -4,19 +4,19 @@
 Guide.
 
 ## Reputation SQL
-```
-CREATE TABLE `group_rep` (
-	`id` INT(11) NOT NULL AUTO_INCREMENT,
+```sql
+CREATE TABLE `player_reputation` (
 	`citizenid` VARCHAR(55) NOT NULL COLLATE 'utf8mb4_general_ci',
 	`reputation` LONGTEXT NOT NULL COLLATE 'utf8mb4_bin',
-	UNIQUE INDEX `id` (`id`) USING BTREE,
+	PRIMARY KEY (`citizenid`) USING BTREE,
+	UNIQUE INDEX `citizenid` (`citizenid`) USING BTREE,
 	CONSTRAINT `reputation` CHECK (json_valid(`reputation`))
 )
 COLLATE='utf8mb4_general_ci'
 ENGINE=InnoDB
 ;
 
-CREATE TABLE `group_boosts` (
+CREATE TABLE `reputation_boosts` (
 	`transactionId` INT(11) NOT NULL,
 	`redeemed` INT(11) NOT NULL,
 	`license` VARCHAR(50) NOT NULL COLLATE 'utf8mb4_unicode_ci',

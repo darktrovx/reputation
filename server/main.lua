@@ -24,7 +24,7 @@ function reputation.CheckSaveState(citizenid)
 end
 
 function reputation.GetPlayerRep(citizenid)
-    local rep = MySQL.single.await("SELECT reputation FROM group_rep WHERE citizenid = ? LIMIT 1", { citizenid })
+    local rep = MySQL.single.await("SELECT reputation FROM player_reputation WHERE citizenid = ? LIMIT 1", { citizenid })
     if not rep then
         return {}
     else
@@ -33,7 +33,7 @@ function reputation.GetPlayerRep(citizenid)
 end
 
 function reputation.SavePlayerRep(citizenid)
-    MySQL.Async.execute("INSERT INTO group_rep (citizenid, reputation) VALUES (@citizenid, @reputation) ON DUPLICATE KEY UPDATE reputation = @reputation", {
+    MySQL.Async.execute("INSERT INTO player_reputation (citizenid, reputation) VALUES (@citizenid, @reputation) ON DUPLICATE KEY UPDATE reputation = @reputation", {
         ['@citizenid'] = citizenid,
         ['@reputation'] = json.encode(CACHE[citizenid].reputations),
     })
@@ -336,7 +336,7 @@ lib.addCommand('addboost', {
     local Target = exports.qbx_core:GetPlayer(args.id)
     if not Target then return end
 
-    MySQL.Async.insert('INSERT INTO group_boosts (transactionId, redeemed, license, type, multiplier, targets, created, activated) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', { 
+    MySQL.Async.insert('INSERT INTO reputation_boosts (transactionId, redeemed, license, type, multiplier, targets, created, activated) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', { 
         'admin',
         1,
         Target.PlayerData.license,
@@ -380,7 +380,7 @@ RegisterCommand("donatorPurchase", function(source, args)
             boostTime = 2
         end
 
-        MySQL.Async.insert('INSERT INTO group_boosts (transactionId, redeemed, license, type, multiplier, targets, created, activated) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', { 
+        MySQL.Async.insert('INSERT INTO reputation_boosts (transactionId, redeemed, license, type, multiplier, targets, created, activated) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', { 
             data.transactionId,
             0,
             '',
